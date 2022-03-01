@@ -4,7 +4,7 @@
  * file that was distributed with this source code.
  */
 
-require_once __DIR__ . '/../vendor/autoload.php';
+require_once __DIR__ . '/../../../autoload.php';
 
 $app = new \Notamedia\ConsoleJedi\Application\Application();
 $app->autoloadTests();
