@@ -15,23 +15,20 @@ class Exporter implements MigrationInterface
      * @var array
      */
     protected $config = [];
-
-    /**
-     * @var array
-     */
-    private $session = [];
-
     /**
      * @var \CIBlockCMLExport
      */
     protected $export;
-
     /**
      * Prefix temp file
      *
      * @var string
      */
     protected $prefix = '.tmp';
+    /**
+     * @var array
+     */
+    private $session = [];
 
     public function __construct()
     {

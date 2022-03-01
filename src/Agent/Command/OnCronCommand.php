@@ -36,5 +36,7 @@ class OnCronCommand extends BitrixCommand
     {
         Option::set('main', 'agents_use_crontab', 'N');
         Option::set('main', 'check_agents', 'N');
+
+        return $this::SUCCESS;
     }
 }

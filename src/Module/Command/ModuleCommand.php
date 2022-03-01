@@ -22,6 +22,22 @@ use Symfony\Component\Console\Output\OutputInterface;
 abstract class ModuleCommand extends BitrixCommand
 {
     /**
+     * Gets console commands from this package.
+     *
+     * @return Command[]
+     */
+    public static function getCommands()
+    {
+        return [
+            new LoadCommand(),
+            new RegisterCommand(),
+            new RemoveCommand(),
+            new UnregisterCommand(),
+            new UpdateCommand(),
+        ];
+    }
+
+    /**
      * {@inheritdoc}
      */
     protected function configure()
@@ -46,21 +62,5 @@ abstract class ModuleCommand extends BitrixCommand
         ) {
             $output->writeln($module->isThirdParty() . ' is not a kernel module. Correct operation cannot be guaranteed for third-party modules!');
         }
-    }
-
-    /**
-     * Gets console commands from this package.
-     *
-     * @return Command[]
-     */
-    public static function getCommands()
-    {
-        return [
-            new LoadCommand(),
-            new RegisterCommand(),
-            new RemoveCommand(),
-            new UnregisterCommand(),
-            new UpdateCommand(),
-        ];
     }
 }

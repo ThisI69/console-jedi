@@ -2,15 +2,15 @@
 
 namespace Notamedia\ConsoleJedi\Iblock\Command;
 
+use Bitrix\Main\Loader;
 use Notamedia\ConsoleJedi\Application\Command\BitrixCommand;
 use Notamedia\ConsoleJedi\Iblock\Exception\IblockException;
 use Notamedia\ConsoleJedi\Iblock\Exporter;
+use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\FormatterHelper;
-use Bitrix\Main\Loader;
 
 /**
  * Command export information block(s) in xml file(s)
@@ -93,7 +93,6 @@ class ExportCommand extends BitrixCommand
             ->setElements($input->getOption('elements'));
 
         foreach ($this->iblocks as $iblock) {
-
             try {
                 $xml_id = \CIBlockCMLExport::GetIBlockXML_ID($iblock['ID']);
                 $path = implode(DIRECTORY_SEPARATOR, [$this->dir, $xml_id]) . $this->extension;
@@ -104,7 +103,6 @@ class ExportCommand extends BitrixCommand
                     ->execute();
 
                 $output->writeln(sprintf('<info>%s</info> iblock %s %s', 'success', $iblock['CODE'], $path));
-
             } catch (IblockException $e) {
                 $output->writeln(sprintf('<error>%s</error> iblock %s', 'fail', $iblock['CODE']));
                 if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
@@ -113,6 +111,6 @@ class ExportCommand extends BitrixCommand
             }
         }
 
-        return true;
+        return $this::SUCCESS;
     }
 }

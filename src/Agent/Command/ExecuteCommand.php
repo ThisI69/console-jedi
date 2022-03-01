@@ -45,5 +45,7 @@ class ExecuteCommand extends BitrixCommand
 
         $eventManager = new \CEvent();
         $eventManager->CheckEvents();
+
+        return $this::SUCCESS;
     }
 }

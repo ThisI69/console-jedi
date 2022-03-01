@@ -17,11 +17,11 @@ use Notamedia\ConsoleJedi\Module\Command\ModuleCommand;
 use Notamedia\ConsoleJedi\Module\Exception\ModuleException;
 use Notamedia\ConsoleJedi\Module\Exception\ModuleInstallException;
 use Notamedia\ConsoleJedi\Module\Module;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -51,6 +51,16 @@ class InitCommand extends Command
      * @var string Type of the initialized environment.
      */
     private $type;
+
+    /**
+     * Gets type of initialized environment.
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
 
     /**
      * {@inheritdoc}
@@ -133,6 +143,8 @@ class InitCommand extends Command
                 $this->$method($input, $output, $settings);
             }
         }
+
+        return $this::SUCCESS;
     }
 
     /**
@@ -292,7 +304,7 @@ class InitCommand extends Command
             throw new \Exception('Failed to load module "cluster"');
         }
 
-        $memcache = new \CClusterMemcache;
+        $memcache = new \CClusterMemcache();
 
         if (isset($cluster['memcache'])) {
             $output->writeln('   <comment>memcache</comment>');
@@ -358,15 +370,5 @@ class InitCommand extends Command
                 }
             }
         }
-    }
-
-    /**
-     * Gets type of initialized environment.
-     * 
-     * @return string
-     */
-    public function getType()
-    {
-        return $this->type;
     }
 }

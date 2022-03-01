@@ -49,7 +49,7 @@ class AgentTask
      */
     public static function build()
     {
-        return new static;
+        return new static();
     }
 
     /**
@@ -193,6 +193,33 @@ class AgentTask
     }
 
     /**
+     * Create agent in Bitrix queue.
+     *
+     * @param bool $checkExist Return false and set `CAdminException`, if agent already exist.
+     *
+     * @return bool|int ID of agent or false if `$checkExist` is true and agent already exist.
+     */
+    public function create($checkExist = false)
+    {
+        $this->convertation();
+
+        $model = new \CAgent();
+
+        return $model->AddAgent(
+            AgentHelper::createName($this->class, $this->constructorArgs, $this->callChain),
+            $this->module,
+            $this->periodically,
+            $this->interval,
+            null,
+            $this->active,
+            $this->executionTime,
+            $this->sort,
+            $this->userId,
+            $checkExist
+        );
+    }
+
+    /**
      * Convertation property for creation agent in queue through the old and dirty Bitrix API.
      */
     protected function convertation()
@@ -211,32 +238,5 @@ class AgentTask
                 $this->$property = 'N';
             }
         }
-    }
-
-    /**
-     * Create agent in Bitrix queue.
-     *
-     * @param bool $checkExist Return false and set `CAdminException`, if agent already exist.
-     *
-     * @return bool|int ID of agent or false if `$checkExist` is true and agent already exist.
-     */
-    public function create($checkExist = false)
-    {
-        $this->convertation();
-
-        $model = new \CAgent;
-
-        return $model->AddAgent(
-            AgentHelper::createName($this->class, $this->constructorArgs, $this->callChain),
-            $this->module,
-            $this->periodically,
-            $this->interval,
-            null,
-            $this->active,
-            $this->executionTime,
-            $this->sort,
-            $this->userId,
-            $checkExist
-        );
     }
 }

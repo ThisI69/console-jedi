@@ -6,6 +6,7 @@
 
 namespace Notamedia\ConsoleJedi\Application\Command;
 
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -21,7 +22,7 @@ use Symfony\Component\Filesystem\Filesystem;
  */
 class InitCommand extends Command
 {
-    const COMPLETED_LOGO = '
+    public const COMPLETED_LOGO = '
                       ____
                  _.\' :  `._
              .-.\'`.  ;   .\'`.-.
@@ -101,6 +102,8 @@ class InitCommand extends Command
         $this->createConfiguration($input, $output);
 
         $output->writeln('<info>' . static::COMPLETED_LOGO . '</info>');
+
+        return Command::SUCCESS;
     }
 
     /**

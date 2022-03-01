@@ -22,7 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ReIndexCommand extends BitrixCommand
 {
-    const UPDATE_TIME = 5;
+    public const UPDATE_TIME = 5;
 
     /**
      * {@inheritdoc}
@@ -33,8 +33,12 @@ class ReIndexCommand extends BitrixCommand
 
         $this->setName('search:reindex')
             ->setDescription('Rebuild search index')
-            ->addOption('full', 'f', InputOption::VALUE_NONE,
-                'Clears existing index (otherwise only changed entries would be indexed)');
+            ->addOption(
+                'full',
+                'f',
+                InputOption::VALUE_NONE,
+                'Clears existing index (otherwise only changed entries would be indexed)'
+            );
     }
 
     /**

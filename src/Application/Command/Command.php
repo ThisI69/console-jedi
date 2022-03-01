@@ -6,6 +6,8 @@
 
 namespace Notamedia\ConsoleJedi\Application\Command;
 
+use Notamedia\ConsoleJedi\Application\Application;
+
 /**
  * Base class for console command.
  *
@@ -16,7 +18,7 @@ class Command extends \Symfony\Component\Console\Command\Command
     /**
      * @return \Notamedia\ConsoleJedi\Application\Application
      */
-    public function getApplication()
+    public function getApplication() : Application
     {
         return parent::getApplication();
     }

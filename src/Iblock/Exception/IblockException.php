@@ -8,5 +8,4 @@ namespace Notamedia\ConsoleJedi\Iblock\Exception;
  */
 class IblockException extends \RuntimeException
 {
-
 }

@@ -9,15 +9,15 @@ namespace Notamedia\ConsoleJedi\Application;
 use Bitrix\Main\DB\ConnectionException;
 use Bitrix\Main\Loader;
 use Bitrix\Main\ModuleManager;
-use Notamedia\ConsoleJedi\Agent\Command\OnCronCommand;
 use Notamedia\ConsoleJedi\Agent\Command\ExecuteCommand;
+use Notamedia\ConsoleJedi\Agent\Command\OnCronCommand;
 use Notamedia\ConsoleJedi\Application\Exception\ConfigurationException;
 use Notamedia\ConsoleJedi\Cache\Command\ClearCommand;
 use Notamedia\ConsoleJedi\Environment\Command\InitCommand;
-use Notamedia\ConsoleJedi\Module\Command as Module;
-use Notamedia\ConsoleJedi\Search\Command\ReIndexCommand;
 use Notamedia\ConsoleJedi\Iblock\Command\ExportCommand;
 use Notamedia\ConsoleJedi\Iblock\Command\ImportCommand;
+use Notamedia\ConsoleJedi\Module\Command as Module;
+use Notamedia\ConsoleJedi\Search\Command\ReIndexCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -33,23 +33,23 @@ class Application extends \Symfony\Component\Console\Application
     /**
      * Version of the Console Jedi application.
      */
-    const VERSION = '1.0.0';
+    public const VERSION = '1.0.0';
     /**
      * Default name of configuration file.
      */
-    const CONFIG_DEFAULT_FILE = './.jedi.php';
+    public const CONFIG_DEFAULT_FILE = './.jedi.php';
     /**
      * Bitrix is unavailable.
      */
-    const BITRIX_STATUS_UNAVAILABLE = 500;
+    public const BITRIX_STATUS_UNAVAILABLE = 500;
     /**
      * Bitrix is available, but not have connection to DB.
      */
-    const BITRIX_STATUS_NO_DB_CONNECTION = 100;
+    public const BITRIX_STATUS_NO_DB_CONNECTION = 100;
     /**
      * Bitrix is available.
      */
-    const BITRIX_STATUS_COMPLETE = 0;
+    public const BITRIX_STATUS_COMPLETE = 0;
     /**
      * @var int Status of Bitrix kernel. Value of constant `Application::BITRIX_STATUS_*`.
      */
@@ -74,7 +74,7 @@ class Application extends \Symfony\Component\Console\Application
     /**
      * {@inheritdoc}
      */
-    public function doRun(InputInterface $input, OutputInterface $output)
+    public function doRun(InputInterface $input, OutputInterface $output): int
     {
         if ($this->getConfiguration() === null) {
             $this->loadConfiguration();
@@ -118,8 +118,10 @@ class Application extends \Symfony\Component\Console\Application
 
                 case static::BITRIX_STATUS_COMPLETE:
                     if ($this->getCommandName($input) === null) {
-                        $output->writeln(PHP_EOL . sprintf('Using Bitrix <info>kernel v%s</info>.</info>', SM_VERSION),
-                            OutputInterface::VERBOSITY_VERY_VERBOSE);
+                        $output->writeln(
+                            PHP_EOL . sprintf('Using Bitrix <info>kernel v%s</info>.</info>', SM_VERSION),
+                            OutputInterface::VERBOSITY_VERY_VERBOSE
+                        );
                     }
                     break;
             }
@@ -129,66 +131,13 @@ class Application extends \Symfony\Component\Console\Application
     }
 
     /**
-     * {@inheritdoc}
-     */
-    protected function getDefaultCommands()
-    {
-        $commands = parent::getDefaultCommands();
-        $commands[] = new \Notamedia\ConsoleJedi\Application\Command\InitCommand();
-
-        return $commands;
-    }
-
-    /**
-     * Gets Bitrix console commands from this package.
+     * Gets application configuration.
      *
-     * @return Command[]
+     * @return null|array
      */
-    protected function getBitrixCommands()
+    public function getConfiguration(): ?array
     {
-        return array_merge(
-            [
-                new OnCronCommand(),
-                new ExecuteCommand(),
-                new ClearCommand(),
-                new InitCommand(),
-                new ReIndexCommand(),
-                new ExportCommand(),
-                new ImportCommand(),
-                new ReIndexCommand(),
-            ],
-            Module\ModuleCommand::getCommands()
-        );
-    }
-
-    /**
-     * Gets console commands from modules.
-     *
-     * @return Command[]
-     *
-     * @throws \Bitrix\Main\LoaderException
-     */
-    protected function getModulesCommands()
-    {
-        $commands = [];
-
-        foreach (ModuleManager::getInstalledModules() as $module) {
-            $cliFile = getLocalPath('modules/' . $module['ID'] . '/cli.php');
-
-            if ($cliFile === false) {
-                continue;
-            } elseif (!Loader::includeModule($module['ID'])) {
-                continue;
-            }
-
-            $config = include_once $this->getDocumentRoot() . $cliFile;
-
-            if (isset($config['commands']) && is_array($config['commands'])) {
-                $commands = array_merge($commands, $config['commands']);
-            }
-        }
-
-        return $commands;
+        return $this->configuration;
     }
 
     /**
@@ -200,7 +149,7 @@ class Application extends \Symfony\Component\Console\Application
      *
      * @throws ConfigurationException
      */
-    public function loadConfiguration($path = self::CONFIG_DEFAULT_FILE)
+    public function loadConfiguration($path = self::CONFIG_DEFAULT_FILE): bool
     {
         if (!is_file($path)) {
             return false;
@@ -228,13 +177,13 @@ class Application extends \Symfony\Component\Console\Application
     }
 
     /**
-     * Gets application configuration.
+     * Gets root directory from which are running Console Jedi.
      *
-     * @return null|array
+     * @return string
      */
-    public function getConfiguration()
+    public function getRoot(): string
     {
-        return $this->configuration;
+        return getcwd();
     }
 
     /**
@@ -242,7 +191,7 @@ class Application extends \Symfony\Component\Console\Application
      *
      * @return int The status of readiness kernel.
      */
-    public function initializeBitrix()
+    public function initializeBitrix(): int
     {
         if ($this->bitrixStatus === static::BITRIX_STATUS_COMPLETE) {
             return static::BITRIX_STATUS_COMPLETE;
@@ -280,7 +229,7 @@ class Application extends \Symfony\Component\Console\Application
      *
      * @return bool
      */
-    public function checkBitrix()
+    public function checkBitrix(): bool
     {
         if (
             !is_file($_SERVER['DOCUMENT_ROOT'] . '/bitrix/.settings.php')
@@ -293,13 +242,25 @@ class Application extends \Symfony\Component\Console\Application
     }
 
     /**
-     * Gets Bitrix status.
+     * Gets Bitrix console commands from this package.
      *
-     * @return int Value of constant `Application::BITRIX_STATUS_*`.
+     * @return Command[]
      */
-    public function getBitrixStatus()
+    protected function getBitrixCommands(): array
     {
-        return $this->bitrixStatus;
+        return array_merge(
+            [
+                new OnCronCommand(),
+                new ExecuteCommand(),
+                new ClearCommand(),
+                new InitCommand(),
+                new ReIndexCommand(),
+                new ExportCommand(),
+                new ImportCommand(),
+                new ReIndexCommand(),
+            ],
+            Module\ModuleCommand::getCommands()
+        );
     }
 
     /**
@@ -307,9 +268,69 @@ class Application extends \Symfony\Component\Console\Application
      *
      * @return bool
      */
-    public function isBitrixLoaded()
+    public function isBitrixLoaded(): bool
     {
         return $this->bitrixStatus === static::BITRIX_STATUS_COMPLETE;
+    }
+
+    /**
+     * Gets console commands from modules.
+     *
+     * @return Command[]
+     *
+     * @throws \Bitrix\Main\LoaderException
+     */
+    protected function getModulesCommands(): array
+    {
+        $commands = [];
+
+        foreach (ModuleManager::getInstalledModules() as $module) {
+            $cliFile = getLocalPath('modules/' . $module['ID'] . '/cli.php');
+
+            if ($cliFile === false) {
+                continue;
+            } elseif (!Loader::includeModule($module['ID'])) {
+                continue;
+            }
+
+            $config = include_once $this->getDocumentRoot() . $cliFile;
+
+            if (isset($config['commands']) && is_array($config['commands'])) {
+                $commands = array_merge($commands, $config['commands']);
+            }
+        }
+
+        return $commands;
+    }
+
+    /**
+     * Gets document root of site.
+     *
+     * @return null|string
+     */
+    public function getDocumentRoot(): ?string
+    {
+        return $this->documentRoot;
+    }
+
+    /**
+     * Sets path to the document root of site.
+     *
+     * @param string $dir Path to document root.
+     */
+    public function setDocumentRoot(string $dir)
+    {
+        $_SERVER['DOCUMENT_ROOT'] = $this->documentRoot = $dir;
+    }
+
+    /**
+     * Gets Bitrix status.
+     *
+     * @return int Value of constant `Application::BITRIX_STATUS_*`.
+     */
+    public function getBitrixStatus(): int
+    {
+        return $this->bitrixStatus;
     }
 
     /**
@@ -362,32 +383,13 @@ class Application extends \Symfony\Component\Console\Application
     }
 
     /**
-     * Gets root directory from which are running Console Jedi.
-     *
-     * @return string
+     * {@inheritdoc}
      */
-    public function getRoot()
+    protected function getDefaultCommands(): array
     {
-        return getcwd();
-    }
+        $commands = parent::getDefaultCommands();
+        $commands[] = new \Notamedia\ConsoleJedi\Application\Command\InitCommand();
 
-    /**
-     * Sets path to the document root of site.
-     *
-     * @param string $dir Path to document root.
-     */
-    public function setDocumentRoot($dir)
-    {
-        $_SERVER['DOCUMENT_ROOT'] = $this->documentRoot = $dir;
-    }
-
-    /**
-     * Gets document root of site.
-     *
-     * @return null|string
-     */
-    public function getDocumentRoot()
-    {
-        return $this->documentRoot;
+        return $commands;
     }
 }

@@ -3,7 +3,6 @@
 namespace Notamedia\ConsoleJedi\Iblock;
 
 use Bitrix\Main\Loader;
-use Bitrix\Main\IO\Path;
 use Notamedia\ConsoleJedi\Iblock\Exception\ImportException;
 
 /**
@@ -15,21 +14,18 @@ class Importer implements MigrationInterface
      * @var array
      */
     protected $config = [];
-
-    /**
-     * @var array
-     */
-    private $session = [];
-
     /**
      * @var \CIBlockXMLFile
      */
     protected $xml;
-
     /**
      * @var \CIBlockCMLImport
      */
     protected $import;
+    /**
+     * @var array
+     */
+    private $session = [];
 
     public function __construct()
     {
@@ -47,7 +43,6 @@ class Importer implements MigrationInterface
         Loader::includeModule('iblock');
         $this->xml = new \CIBlockXMLFile();
         $this->import = new \CIBlockCMLImport();
-
     }
 
     /**
@@ -133,8 +128,9 @@ class Importer implements MigrationInterface
     {
         $handle = fopen($this->config['path'], "r");
 
-        if (!$handle)
+        if (!$handle) {
             throw new ImportException('Unable to open file, or file not exist');
+        }
 
         if (!$this->import->CheckIfFileIsCML($this->config['path'])) {
             throw new ImportException('File is not valid');

@@ -63,5 +63,7 @@ class ClearCommand extends BitrixCommand
             Application::getInstance()->getTaggedCache()->clearByTag($tag);
             $output->writeln('<info>Bitrix cache by tag "' . $tag . '" was deleted</info>');
         }
+
+        return $this::SUCCESS;
     }
 }

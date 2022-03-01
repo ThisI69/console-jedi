@@ -17,24 +17,24 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class RemoveCommand extends ModuleCommand
 {
-	/**
-	 * {@inheritdoc}
-	 */
-	protected function configure()
-	{
-		parent::configure();
+    /**
+     * {@inheritdoc}
+     */
+    protected function configure()
+    {
+        parent::configure();
 
-		$this->setName('module:remove')
-			->setDescription('Uninstall and remove module folder from system');
-	}
+        $this->setName('module:remove')
+            ->setDescription('Uninstall and remove module folder from system');
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	protected function execute(InputInterface $input, OutputInterface $output)
-	{
-		$module = new Module($input->getArgument('module'));
-		$module->remove();
-		$output->writeln(sprintf('removed <info>%s</info>', $module->getName()));
-	}
+    /**
+     * {@inheritdoc}
+     */
+    protected function execute(InputInterface $input, OutputInterface $output)
+    {
+        $module = new Module($input->getArgument('module'));
+        $module->remove();
+        $output->writeln(sprintf('removed <info>%s</info>', $module->getName()));
+    }
 }

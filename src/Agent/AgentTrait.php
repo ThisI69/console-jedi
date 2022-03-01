@@ -111,6 +111,17 @@ trait AgentTrait
     }
 
     /**
+     * Checks that object running as agent. Object is considered an agent
+     * if it is created using the static method `agent()`.
+     *
+     * @return bool
+     */
+    public function isAgentMode()
+    {
+        return static::$agentMode;
+    }
+
+    /**
      * Gets agent name. Use to return this name from the executed method of agent.
      *
      * Usage:
@@ -130,16 +141,5 @@ trait AgentTrait
     public function getAgentName(array $callChain)
     {
         return AgentHelper::createName(get_called_class(), static::$constructorArgs, $callChain);
-    }
-
-    /**
-     * Checks that object running as agent. Object is considered an agent
-     * if it is created using the static method `agent()`.
-     *
-     * @return bool
-     */
-    public function isAgentMode()
-    {
-        return static::$agentMode;
     }
 }

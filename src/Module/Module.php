@@ -49,57 +49,6 @@ class Module
     }
 
     /**
-     * @return \CModule
-     */
-    protected function &getObject()
-    {
-        if (!isset($this->object)) {
-            $this->object = \CModule::CreateModuleObject($this->name);
-        }
-
-        if (!is_object($this->object) || !($this->object instanceof \CModule)) {
-            unset($this->object);
-            throw new Exception\ModuleNotFoundException('Module not found or incorrect', $this->name);
-        }
-
-        return $this->object;
-    }
-
-    /**
-     * Checks for module and module object existence.
-     *
-     * @return bool
-     */
-    public function exist()
-    {
-        try {
-            $this->getObject();
-        } catch (Exception\ModuleNotFoundException $e) {
-            return false;
-        }
-
-        return true;
-    }
-
-    /**
-     * Check if module exists and installed
-     *
-     * @return bool
-     */
-    public function isRegistered()
-    {
-        return ModuleManager::isModuleInstalled($this->name) && $this->exist();
-    }
-
-    /**
-     * @return bool true for marketplace modules, false for kernel modules
-     */
-    public function isThirdParty()
-    {
-        return strpos($this->name, '.') !== false;
-    }
-
-    /**
      * Install module.
      *
      * @throws Exception\ModuleException
@@ -150,6 +99,49 @@ class Module
     }
 
     /**
+     * Check if module exists and installed
+     *
+     * @return bool
+     */
+    public function isRegistered()
+    {
+        return ModuleManager::isModuleInstalled($this->name) && $this->exist();
+    }
+
+    /**
+     * Checks for module and module object existence.
+     *
+     * @return bool
+     */
+    public function exist()
+    {
+        try {
+            $this->getObject();
+        } catch (Exception\ModuleNotFoundException $e) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @return \CModule
+     */
+    protected function &getObject()
+    {
+        if (!isset($this->object)) {
+            $this->object = \CModule::CreateModuleObject($this->name);
+        }
+
+        if (!is_object($this->object) || !($this->object instanceof \CModule)) {
+            unset($this->object);
+            throw new Exception\ModuleNotFoundException('Module not found or incorrect', $this->name);
+        }
+
+        return $this->object;
+    }
+
+    /**
      * Download module from Marketplace.
      *
      * @return $this
@@ -164,12 +156,63 @@ class Module
                     $this->getName(),
                     $strError,
                     $this->isBeta() ? 'N' : 'Y',
-                    LANGUAGE_ID)
+                    LANGUAGE_ID
+                )
                 ) {
                     throw new Exception\ModuleLoadException($strError, $this->getName());
                 }
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * Returns module name.
+     *
+     * @return string
+     */
+    public function getName()
+    {
+        return $this->name;
+    }
+
+    /**
+     * Beta releases allowed?
+     *
+     * @return boolean
+     */
+    public function isBeta()
+    {
+        return $this->beta;
+    }
+
+    /**
+     * Set beta releases installation.
+     *
+     * @param boolean $beta
+     */
+    public function setBeta($beta = true)
+    {
+        $this->beta = $beta;
+    }
+
+    /**
+     * Uninstall and remove module directory.
+     */
+    public function remove()
+    {
+        if ($this->isRegistered()) {
+            $this->unRegister();
+        }
+
+        $path = getLocalPath('modules/' . $this->getName());
+
+        if ($path) {
+            (new Filesystem())->remove($_SERVER['DOCUMENT_ROOT'] . $path);
+        }
+
+        unset($this->object);
 
         return $this;
     }
@@ -223,26 +266,6 @@ class Module
     }
 
     /**
-     * Uninstall and remove module directory.
-     */
-    public function remove()
-    {
-        if ($this->isRegistered()) {
-            $this->unRegister();
-        }
-
-        $path = getLocalPath('modules/' . $this->getName());
-
-        if ($path) {
-            (new Filesystem())->remove($_SERVER['DOCUMENT_ROOT'] . $path);
-        }
-
-        unset($this->object);
-
-        return $this;
-    }
-
-    /**
      * Update module.
      *
      * It must be called repeatedly until the method returns false.
@@ -256,8 +279,10 @@ class Module
         require_once($_SERVER["DOCUMENT_ROOT"] . '/bitrix/modules/main/classes/general/update_client_partner.php');
 
         if (!$this->isThirdParty()) {
-            throw new Exception\ModuleUpdateException('Kernel module updates are currently not supported.',
-                $this->getName());
+            throw new Exception\ModuleUpdateException(
+                'Kernel module updates are currently not supported.',
+                $this->getName()
+            );
         }
 
         // ensures module existence
@@ -294,8 +319,10 @@ class Module
         $updateDir = null;
 
         if (!\CUpdateClientPartner::UnGzipArchive($updateDir, $errorMessage, true)) {
-            throw new Exception\ModuleUpdateException('[CL02] UnGzipArchive failed. ' . $errorMessage,
-                $this->getName());
+            throw new Exception\ModuleUpdateException(
+                '[CL02] UnGzipArchive failed. ' . $errorMessage,
+                $this->getName()
+            );
         }
 
         $this->validateUpdate($updateDir);
@@ -320,11 +347,21 @@ class Module
                 }
             }
         } else {
-            throw new Exception\ModuleUpdateException('[CL04] UpdateStepModules failed. ' . $errorMessage,
-                $this->getName());
+            throw new Exception\ModuleUpdateException(
+                '[CL04] UpdateStepModules failed. ' . $errorMessage,
+                $this->getName()
+            );
         }
 
         return true;
+    }
+
+    /**
+     * @return bool true for marketplace modules, false for kernel modules
+     */
+    public function isThirdParty()
+    {
+        return strpos($this->name, '.') !== false;
     }
 
     /**
@@ -336,8 +373,10 @@ class Module
     {
         $errorMessage = null;
         if (!\CUpdateClientPartner::CheckUpdatability($updateDir, $errorMessage)) {
-            throw new Exception\ModuleUpdateException('[CL03] CheckUpdatability failed. ' . $errorMessage,
-                $this->getName());
+            throw new Exception\ModuleUpdateException(
+                '[CL03] CheckUpdatability failed. ' . $errorMessage,
+                $this->getName()
+            );
         }
 
         if (isset($updateDescription["DATA"]["#"]["ERROR"])) {
@@ -347,36 +386,6 @@ class Module
             }
             throw new Exception\ModuleUpdateException($errorMessage, $this->getName());
         }
-    }
-
-    /**
-     * Returns module name.
-     *
-     * @return string
-     */
-    public function getName()
-    {
-        return $this->name;
-    }
-
-    /**
-     * Beta releases allowed?
-     *
-     * @return boolean
-     */
-    public function isBeta()
-    {
-        return $this->beta;
-    }
-
-    /**
-     * Set beta releases installation.
-     *
-     * @param boolean $beta
-     */
-    public function setBeta($beta = true)
-    {
-        $this->beta = $beta;
     }
 
     public function getVersion()

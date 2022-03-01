@@ -2,15 +2,15 @@
 
 namespace Notamedia\ConsoleJedi\Iblock\Command;
 
+use Bitrix\Main\Loader;
 use Notamedia\ConsoleJedi\Application\Command\BitrixCommand;
 use Notamedia\ConsoleJedi\Iblock\Exception\IblockException;
 use Notamedia\ConsoleJedi\Iblock\Importer;
+use Symfony\Component\Console\Helper\FormatterHelper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\FormatterHelper;
-use Bitrix\Main\Loader;
 
 /**
  * Command import information block(s) from xml file(s)
@@ -56,7 +56,6 @@ class ImportCommand extends BitrixCommand
                 'If an existing element is no longer in the source file [ leave: "N", deactivate: "A", delete: "D" ]',
                 'A'
             );
-
     }
 
     /**
@@ -95,17 +94,16 @@ class ImportCommand extends BitrixCommand
             ->setType($this->type)
             ->setSites($this->sites)
             ->setActionSection($input->getOption('sections'))
-            ->setActionElement($input->getOption('elements'));;
+            ->setActionElement($input->getOption('elements'));
+        ;
 
         foreach (glob(implode(DIRECTORY_SEPARATOR . '*', [$this->dir, $this->extension])) as $file) {
-
             try {
                 $importer
                     ->setPath($file)
                     ->execute();
 
                 $output->writeln(sprintf('<info>%s</info> file %s', 'success', $file));
-
             } catch (IblockException $e) {
                 $output->writeln(sprintf('<error>%s</error> file %s', 'fail', $file));
                 if ($output->getVerbosity() >= OutputInterface::VERBOSITY_VERBOSE) {
@@ -113,5 +111,7 @@ class ImportCommand extends BitrixCommand
                 }
             }
         }
+
+        return $this::SUCCESS;
     }
 }

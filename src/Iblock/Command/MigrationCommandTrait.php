@@ -2,12 +2,12 @@
 
 namespace Notamedia\ConsoleJedi\Iblock\Command;
 
+use Bitrix\Iblock\IblockTable;
+use Bitrix\Iblock\TypeTable;
+use Bitrix\Main\SiteTable;
 use Notamedia\ConsoleJedi\Application\Application;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Bitrix\Main\SiteTable;
-use Bitrix\Iblock\TypeTable;
-use Bitrix\Iblock\IblockTable;
 
 /**
  * Trait checks and sets import/export parameters information block

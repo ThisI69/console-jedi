@@ -69,10 +69,14 @@ class LoadCommand extends ModuleCommand
             try {
                 $module->register();
             } catch (ModuleInstallException $e) {
-                $output->writeln(sprintf('<comment>%s</comment>', $e->getMessage()),
-                    OutputInterface::VERBOSITY_VERBOSE);
-                $output->writeln(sprintf('Module loaded, but <error>not registered</error>. You need to do it yourself in admin panel.',
-                    $module->getName()));
+                $output->writeln(
+                    sprintf('<comment>%s</comment>', $e->getMessage()),
+                    OutputInterface::VERBOSITY_VERBOSE
+                );
+                $output->writeln(sprintf(
+                    'Module loaded, but <error>not registered</error>. You need to do it yourself in admin panel.',
+                    $module->getName()
+                ));
             }
         }
 

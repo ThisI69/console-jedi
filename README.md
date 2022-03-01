@@ -2,11 +2,11 @@
 
 [![Build Status](https://travis-ci.org/notamedia/console-jedi.svg)](https://travis-ci.org/notamedia/console-jedi)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/notamedia/console-jedi/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/notamedia/console-jedi/?branch=master)
-[![Latest Stable Version](https://poser.pugx.org/notamedia/console-jedi/v/stable)](https://packagist.org/packages/notamedia/console-jedi) 
-[![Total Downloads](https://poser.pugx.org/notamedia/console-jedi/downloads)](https://packagist.org/packages/notamedia/console-jedi) 
+[![Latest Stable Version](https://poser.pugx.org/notamedia/console-jedi/v/stable)](https://packagist.org/packages/notamedia/console-jedi)
+[![Total Downloads](https://poser.pugx.org/notamedia/console-jedi/downloads)](https://packagist.org/packages/notamedia/console-jedi)
 [![License](https://poser.pugx.org/notamedia/console-jedi/license)](https://packagist.org/packages/notamedia/console-jedi)
 
-Console application for administration and support projects on Bitrix CMS. 
+Console application for administration and support projects on Bitrix CMS.
 
 Features:
 
