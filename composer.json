@@ -14,7 +14,7 @@
   },
   "require": {
     "php": ">=5.4",
-    "symfony/console": "~2.8|~3",
+    "symfony/console": "^5.4 || ^6.0",
     "symfony/filesystem": "~2.8|~3"
   },
   "autoload": {
