@@ -1,5 +1,5 @@
 {
-  "name": "notamedia/console-jedi",
+  "name": "thisi69/console-jedi",
   "description": "Console application for CMS Bitrix",
   "keywords": [
     "bitrix",
@@ -9,8 +9,8 @@
   "type": "library",
   "license": "MIT",
   "support": {
-    "issues": "https://github.com/notamedia/console-jedi/issues",
-    "source": "https://github.com/notamedia/console-jedi/"
+    "issues": "https://github.com/thisi69/console-jedi/issues",
+    "source": "https://github.com/thisi69/console-jedi/"
   },
   "require": {
     "php": ">=5.4",
