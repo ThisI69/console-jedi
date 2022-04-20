@@ -88,8 +88,6 @@ class AnnotateCommand extends BitrixCommand implements AnnotationInterface
 
     protected function configure()
     {
-        $inBitrixDir = realpath(Application::getDocumentRoot() . Application::getPersonalRoot()) === realpath(getcwd());
-
         $this
             // the name of the command (the part after "bin/console")
             ->setName('orm:annotate')
@@ -104,9 +102,7 @@ class AnnotateCommand extends BitrixCommand implements AnnotationInterface
                 new InputDefinition(array(
                     new InputArgument(
                         'output', InputArgument::OPTIONAL, 'File for annotations to be saved to',
-                        $inBitrixDir
-                            ? 'modules/orm_annotations.php'
-                            : Application::getDocumentRoot() . Application::getPersonalRoot() . '/modules/orm_annotations.php'
+                        Application::getDocumentRoot() . Application::getPersonalRoot() . '/modules/orm_annotations.php'
                     ),
                     new InputOption(
                         'modules', 'm', InputOption::VALUE_OPTIONAL,
@@ -170,9 +166,6 @@ class AnnotateCommand extends BitrixCommand implements AnnotationInterface
 
         // output file path
         $filePath = $input->getArgument('output');
-        $filePath = ($filePath[0] == '/')
-            ? $filePath // absolute
-            : getcwd() . '/' . $filePath; // relative
 
         // handle entities
         $annotations = [];
