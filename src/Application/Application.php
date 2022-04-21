@@ -16,9 +16,10 @@ use Notamedia\ConsoleJedi\Cache\Command\ClearCommand;
 use Notamedia\ConsoleJedi\Environment\Command\InitCommand;
 use Notamedia\ConsoleJedi\Iblock\Command\ExportCommand;
 use Notamedia\ConsoleJedi\Iblock\Command\ImportCommand;
-use Notamedia\ConsoleJedi\ORM\Command\AnnotateCommand;
 use Notamedia\ConsoleJedi\Module\Command as Module;
+use Notamedia\ConsoleJedi\ORM\Command\AnnotateCommand;
 use Notamedia\ConsoleJedi\Search\Command\ReIndexCommand;
+use Sprint\Migration\SymfonyBundle\Command\ConsoleCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -83,6 +84,10 @@ class Application extends \Symfony\Component\Console\Application
 
         if (!in_array($this->getCommandName($input), ['environment:init', 'env:init'])) {
             $this->initializeBitrix();
+        }
+
+        if (in_array($this->getCommandName($input), ['sprint:migration'])){
+            \CModule::IncludeModule('sprint.migration');
         }
 
         if ($this->getConfiguration()) {
@@ -249,6 +254,7 @@ class Application extends \Symfony\Component\Console\Application
      */
     protected function getBitrixCommands(): array
     {
+
         return array_merge(
             [
                 new OnCronCommand(),
@@ -259,6 +265,7 @@ class Application extends \Symfony\Component\Console\Application
                 new ExportCommand(),
                 new ImportCommand(),
                 new AnnotateCommand(),
+                new ConsoleCommand(),
             ],
             Module\ModuleCommand::getCommands()
         );
