@@ -87,7 +87,9 @@ class Application extends \Symfony\Component\Console\Application
         }
 
         if (in_array($this->getCommandName($input), ['sprint:migration'])){
-            \CModule::IncludeModule('sprint.migration');
+            if(!\CModule::IncludeModule('sprint.migration')){
+                $output->writeln(PHP_EOL . sprintf('<error>No install module sprint.migration</error>'));
+            }
         }
 
         if ($this->getConfiguration()) {
