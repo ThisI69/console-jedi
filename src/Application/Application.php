@@ -86,10 +86,8 @@ class Application extends \Symfony\Component\Console\Application
             $this->initializeBitrix();
         }
 
-        if (in_array($this->getCommandName($input), ['sprint:migration'])){
-            if(!\CModule::IncludeModule('sprint.migration')){
-                $output->writeln(PHP_EOL . sprintf('<error>No install module sprint.migration</error>'));
-            }
+        if (!\CModule::IncludeModule('sprint.migration')) {
+            $output->writeln(PHP_EOL . sprintf('<error>No install module sprint.migration</error>'));
         }
 
         if ($this->getConfiguration()) {
