@@ -228,7 +228,7 @@ class AnnotateCommand extends BitrixCommand implements AnnotationInterface
             }
         }
 
-        return 1;
+        return 0;
     }
 
     protected function getDeclaredClassesDiff()

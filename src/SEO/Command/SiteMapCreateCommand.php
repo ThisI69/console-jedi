@@ -806,6 +806,6 @@ class SiteMapCreateCommand extends BitrixCommand
             }
         }
 
-        return 1;
+        return 0;
     }
 }
