@@ -19,6 +19,7 @@ use Notamedia\ConsoleJedi\Iblock\Command\ImportCommand;
 use Notamedia\ConsoleJedi\Module\Command as Module;
 use Notamedia\ConsoleJedi\ORM\Command\AnnotateCommand;
 use Notamedia\ConsoleJedi\Search\Command\ReIndexCommand;
+use Notamedia\ConsoleJedi\SEO\Command\SiteMapCreateCommand;
 use Sprint\Migration\SymfonyBundle\Command\ConsoleCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
@@ -266,6 +267,7 @@ class Application extends \Symfony\Component\Console\Application
                 new ImportCommand(),
                 new AnnotateCommand(),
                 new ConsoleCommand(),
+                new SiteMapCreateCommand(),
             ],
             Module\ModuleCommand::getCommands()
         );
