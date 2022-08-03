@@ -13,6 +13,7 @@ use Notamedia\ConsoleJedi\Agent\Command\ExecuteCommand;
 use Notamedia\ConsoleJedi\Agent\Command\OnCronCommand;
 use Notamedia\ConsoleJedi\Application\Exception\ConfigurationException;
 use Notamedia\ConsoleJedi\Cache\Command\ClearCommand;
+use Notamedia\ConsoleJedi\Cache\Command\WarmupCommand;
 use Notamedia\ConsoleJedi\Environment\Command\InitCommand;
 use Notamedia\ConsoleJedi\Iblock\Command\ExportCommand;
 use Notamedia\ConsoleJedi\Iblock\Command\ImportCommand;
@@ -261,6 +262,7 @@ class Application extends \Symfony\Component\Console\Application
                 new OnCronCommand(),
                 new ExecuteCommand(),
                 new ClearCommand(),
+                new WarmupCommand(),
                 new InitCommand(),
                 new ReIndexCommand(),
                 new ExportCommand(),
