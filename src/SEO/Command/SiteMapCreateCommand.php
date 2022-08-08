@@ -13,14 +13,15 @@ use Bitrix\Main\Localization\Loc;
 use Bitrix\Main\SiteTable;
 use Bitrix\Main\Type\DateTime;
 use Bitrix\Seo\RobotsFile;
+use Bitrix\Seo\SitemapIblock;
 use Bitrix\Seo\SitemapIndex;
 use Bitrix\Seo\SitemapRuntime;
 use Bitrix\Seo\SitemapRuntimeTable;
 use Bitrix\Seo\SitemapTable;
-use Bitrix\Seo\SitemapIblock;
 use Notamedia\ConsoleJedi\Application\Command\BitrixCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -45,6 +46,12 @@ class SiteMapCreateCommand extends BitrixCommand
                 'ID',
                 InputArgument::REQUIRED,
                 'Sitemap ID to create'
+            )
+            ->addOption(
+                'function',
+                'func',
+                InputOption::VALUE_OPTIONAL,
+                'Execute functions after create sitemap'
             );
 
         // disable Loader::requireModule exception
@@ -649,7 +656,7 @@ class SiteMapCreateCommand extends BitrixCommand
                                             'FORUM_ID' => $forumId,
                                             'APPROVED' => 'Y'),
                                         (
-                                            $NS['FORUM_CURRENT_TOPIC'] > 0 ? array(
+                                        $NS['FORUM_CURRENT_TOPIC'] > 0 ? array(
                                             '>ID' => $NS['FORUM_CURRENT_TOPIC']
                                         ) : array()
                                         )
@@ -775,6 +782,10 @@ class SiteMapCreateCommand extends BitrixCommand
                 SitemapTable::update($ID, array('DATE_RUN' => new DateTime()));
                 $finish = true;
             }
+        }
+
+        if (!empty($input->getOption('function'))) {
+            call_user_func($input->getOption('function'));
         }
 
         $output->writeln('Created files: ' . count($NS['XML_FILES']));
