@@ -23,7 +23,6 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
 /**
  * @package    bitrix
  * @subpackage main
@@ -773,10 +772,8 @@ class SiteMapCreateCommand extends BitrixCommand
                     }
                 }
 
-                $finish = true;
-            }
-            if ($v == $arValueSteps['index']) {
                 SitemapTable::update($ID, array('DATE_RUN' => new DateTime()));
+                $finish = true;
             }
         }
 
@@ -796,7 +793,7 @@ class SiteMapCreateCommand extends BitrixCommand
         return 0;
     }
 
-    function seoSitemapGetFilesData($PID, $arSitemap, $arCurrentDir, $sitemapFile)
+    public function seoSitemapGetFilesData($PID, $arSitemap, $arCurrentDir, $sitemapFile)
     {
         global $NS;
 
