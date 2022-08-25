@@ -15,6 +15,7 @@ use Notamedia\ConsoleJedi\Application\Exception\ConfigurationException;
 use Notamedia\ConsoleJedi\Cache\Command\ClearCommand;
 use Notamedia\ConsoleJedi\Cache\Command\WarmupCommand;
 use Notamedia\ConsoleJedi\Environment\Command\InitCommand;
+use Notamedia\ConsoleJedi\Iblock\Command\CreateIndexCommand;
 use Notamedia\ConsoleJedi\Iblock\Command\ExportCommand;
 use Notamedia\ConsoleJedi\Iblock\Command\ImportCommand;
 use Notamedia\ConsoleJedi\Module\Command as Module;
@@ -267,6 +268,7 @@ class Application extends \Symfony\Component\Console\Application
                 new ReIndexCommand(),
                 new ExportCommand(),
                 new ImportCommand(),
+                new CreateIndexCommand(),
                 new AnnotateCommand(),
                 new ConsoleCommand(),
                 new SiteMapCreateCommand(),
