@@ -33,7 +33,7 @@ use Symfony\Component\Console\Style\SymfonyStyle;
  * @subpackage main
  */
 
-class AnnotateCommand extends BitrixCommand implements AnnotationInterface
+class AnnotateCommand extends BitrixCommand
 {
     use AnnotationTrait;
 
